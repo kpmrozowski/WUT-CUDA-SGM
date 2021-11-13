@@ -1,0 +1,9 @@
+#ifndef __KMROSGM_CONFIG_H__
+#define __KMROSGM_CONFIG_H__
+
+#define KMROSGM_VERSION 
+#define KMROSGM_VERSION_MAJOR 
+#define KMROSGM_VERSION_MINOR 
+#define KMROSGM_VERSION_PATCH 
+
+#endif // __KMROSGM_CONFIG_H__
