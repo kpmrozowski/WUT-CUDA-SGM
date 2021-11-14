@@ -20,6 +20,7 @@ SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} ${CUDA_ARCH}")
 file(GLOB STEREOSRCS "*.cu" "*.cpp")
 
 CUDA_ADD_LIBRARY(sgm Stereo_SGM.cpp ${STEREOSRCS} STATIC)
+target_compile_definitions(sgm PUBLIC "$<$<CONFIG:DEBUG>:DEBUG>")
 
 install(
 	TARGETS sgm
