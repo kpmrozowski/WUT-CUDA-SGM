@@ -1,6 +1,9 @@
 #pragma once
 namespace sgm {
 
+static constexpr int CESUS_WINDOW_WIDTH  = 9;
+static constexpr int CESUS_WINDOW_HEIGHT = 7;
+
 enum class PathType {
 	SCAN_4PATH, //>! Horizontal and vertical paths.
 	SCAN_8PATH  //>! Horizontal, vertical and oblique paths.

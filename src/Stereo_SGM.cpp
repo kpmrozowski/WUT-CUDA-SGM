@@ -17,7 +17,6 @@ namespace sgm {
 		param_(param)
 	{
 		cuda_resource_allocate_all();
-		cuda_resource_fillZero();
 	}
 
 	StereoSGM::~StereoSGM() {
@@ -33,13 +32,6 @@ namespace sgm {
         
         d_tmp_left_disp.allocate(width_ * height_);
 		d_tmp_right_disp.allocate(width_ * height_);
-	}
-	void StereoSGM::cuda_resource_fillZero()
-	{
-        d_left_disp.fillZero();
-		d_right_disp.fillZero();
-		d_tmp_left_disp.fillZero();
-		d_tmp_right_disp.fillZero();
 	}
 
 	void StereoSGM::cuda_resource_free_all()

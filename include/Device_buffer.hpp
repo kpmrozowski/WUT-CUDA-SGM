@@ -27,6 +27,7 @@ public:
 		, m_size(0)
 	{
 		allocate(n);
+		fillZero();
 	}
 
 	DeviceBuffer(const DeviceBuffer&) = delete;

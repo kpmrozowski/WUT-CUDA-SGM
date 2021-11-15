@@ -10,12 +10,12 @@ template <size_t MAX_DISPARITY>
 class MatchingCost {
 
 private:
-	DeviceBuffer<feature_type> m_cost_cube;
+	DeviceBuffer<cost_type> m_cost_cube;
 
 public:
 	MatchingCost();
 
-	const feature_type *get_output() const {
+	const cost_type *get_output() const {
 		return m_cost_cube.data();
 	}
 	

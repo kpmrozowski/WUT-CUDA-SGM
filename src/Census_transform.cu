@@ -1,12 +1,10 @@
 #include <cstdio>
+#include <Parameters.hpp>
 #include "Census_transform.hpp"
 
 namespace sgm {
 
 namespace {
-
-static constexpr int CESUS_WINDOW_WIDTH  = 5;
-static constexpr int CESUS_WINDOW_HEIGHT = 5;
 
 /**
  * @see https://www.spiedigitallibrary.org/journals/optical-engineering/volume-55/issue-06/063107/Improved-census-transform-for-noise-robust-stereo-matching/10.1117/1.OE.55.6.063107.full?SSO=1
@@ -16,26 +14,36 @@ __global__ void census_transform_kernel(
 	feature_type *dest,
 	const T *src,
 	int width,
-	int height)
+	int height
+#ifdef DEBUG
+	, bool *flag
+	, int* bit0
+#endif
+	)
 {
-	using pixel_type = T;
 	const int padX = CESUS_WINDOW_WIDTH / 2;
 	const int padY = CESUS_WINDOW_HEIGHT / 2;
+	int win_x_max = padX;
 	const int x = threadIdx.x;
 	const int y = threadIdx.y + blockIdx.y * blockDim.y;
-	feature_type f = 1;
-	if (padX <= x && x < width - padX && padY <= y && y < height - padY) {
+	feature_type f = 0;
+	if ( (padX <= x && x < width - padX) && (padY <= y && y < height - padY) ) {
 		const T center = src[x + y * width];
         int bitPos0 = 0;
 		int bitPos1 = CESUS_WINDOW_WIDTH * CESUS_WINDOW_HEIGHT - 1;
-		for (int win_y = 0; win_y < CESUS_WINDOW_HEIGHT; ++win_y, ++bitPos0, --bitPos1) {
-			for (int win_x = 0; win_x < CESUS_WINDOW_WIDTH; ++win_x) {
+		for (int win_y = 0; win_y <= padY; ++win_y) {
+			if (padY == win_y) win_x_max = -1;
+			for (int win_x = -padX; win_x <= win_x_max; ++win_x, ++bitPos0, --bitPos1) {
 				const T srcVal0 = src[ x + win_x + (y + win_y) * width ];
 				const T srcVal1 = src[ x - win_x + (y - win_y) * width ];
 				f |= (center < srcVal0) << bitPos0;
 				f |= (center < srcVal1) << bitPos1;
 			}
 		}
+#ifdef DEBUG
+		if (bitPos0 == 22) *flag = true;
+		*bit0 = bitPos0;
+#endif
 		dest[x + y * width] = f;
 	}
 	// else if ( (0 <= x && x < padX || width - padX <= x && x < width) 
@@ -73,14 +81,24 @@ void enqueue_census_transform(
 	}
 	const dim3 bdim(block_x_dim, block_y_dim);
 	const dim3 gdim(1, grid_dim, 1);
-
-	
-	census_transform_kernel<<<gdim, bdim, 0, stream>>>(dest, src, width, height);
 #ifdef DEBUG
+	auto flag = DeviceBuffer<bool>(1);
+	auto bit0 = DeviceBuffer<int>(1);
+	bool flag_cpu[1] = {false};
+	int bit0_cpu[1] = {0};
+	cudaMemcpy(flag.data(), flag_cpu, sizeof(bool), cudaMemcpyHostToDevice);
+	cudaMemcpy(bit0.data(), bit0_cpu, sizeof(int), cudaMemcpyHostToDevice);
+	census_transform_kernel<<<gdim, bdim, 0, stream>>>(dest, src, width, height, flag.data(), bit0.data());
 	feature_type lookup[height * width];
-	printf("dest.size()=%d\n", sizeof(lookup)/sizeof(lookup[0]));
+	printf("dest.size()=%zd\n", sizeof(lookup)/sizeof(lookup[0]));
 	cudaMemcpy(lookup, dest, sizeof(feature_type) * height * width, cudaMemcpyDeviceToHost);
-	printf("dest[100][100]=%d\n", lookup[300 + 300 * width]);
+	printf("dest[90][330]=%ld\n", lookup[90 + 330 * width]);
+	cudaMemcpy(flag_cpu, flag.data(), sizeof(bool), cudaMemcpyDeviceToHost);
+	if (*flag_cpu) printf("fatal error\n");
+	cudaMemcpy(bit0_cpu, bit0.data(), sizeof(int), cudaMemcpyDeviceToHost);
+	printf("bit0=%d\n", *bit0_cpu);
+#else
+	census_transform_kernel<<<gdim, bdim, 0, stream>>>(dest, src, width, height);
 #endif
 }
 
@@ -94,7 +112,7 @@ CensusTransform<T>::CensusTransform()
 
 template <typename T>
 void CensusTransform<T>::enqueue(
-	const input_type *src,
+	const T *src,
 	int width,
 	int height,
 	cudaStream_t stream)

@@ -9,9 +9,6 @@ namespace sgm {
 template <typename T>
 class CensusTransform {
 
-public:
-	using input_type = T;
-
 private:
 	DeviceBuffer<feature_type> m_feature_buffer;
 
@@ -23,7 +20,7 @@ public:
 	}
 	
 	void enqueue(
-		const input_type *src,
+		const T *src,
 		int width,
 		int height,
 		cudaStream_t stream);

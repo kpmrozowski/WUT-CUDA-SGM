@@ -47,7 +47,6 @@ private:
 	StereoSGM& operator=(const StereoSGM&);
     
 	void cuda_resource_allocate_all();
-	void cuda_resource_fillZero();
 	void cuda_resource_free_all();
 	int width_;
 	int height_;
