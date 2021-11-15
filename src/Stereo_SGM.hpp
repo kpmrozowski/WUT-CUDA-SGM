@@ -9,11 +9,6 @@
 
 namespace sgm {
 
-enum class PathType {
-	SCAN_4PATH, //>! Horizontal and vertical paths.
-	SCAN_8PATH  //>! Horizontal, vertical and oblique paths.
-};
-
 class StereoSGM {
 public:
 	static const int SUBPIXEL_SHIFT = 4;
@@ -37,8 +32,6 @@ public:
 	*/
 	StereoSGM(int width, int height, int disparity_size, int depth_bits, const Parameters& param = Parameters());
 	
-    StereoSGM(int width, int height, int disparity_size, int depth_bits, int src_pitch, int dst_pitch, const Parameters& param = Parameters());
-
 	~StereoSGM();
 
 	/**
@@ -60,8 +53,6 @@ private:
 	int height_;
 	int disparity_size_;
 	int depth_bits_;
-	int src_pitch_;
-	int dst_pitch_;
 	Parameters param_;
 
 

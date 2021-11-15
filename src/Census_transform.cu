@@ -1,5 +1,5 @@
 #include <cstdio>
-#include "census_transform.hpp"
+#include "Census_transform.hpp"
 
 namespace sgm {
 
@@ -8,13 +8,15 @@ namespace {
 static constexpr int CESUS_WINDOW_WIDTH  = 5;
 static constexpr int CESUS_WINDOW_HEIGHT = 5;
 
+/**
+ * @see https://www.spiedigitallibrary.org/journals/optical-engineering/volume-55/issue-06/063107/Improved-census-transform-for-noise-robust-stereo-matching/10.1117/1.OE.55.6.063107.full?SSO=1
+ */
 template <typename T>
 __global__ void census_transform_kernel(
 	feature_type *dest,
 	const T *src,
 	int width,
-	int height,
-	int pitch)
+	int height)
 {
 	using pixel_type = T;
 	const int padX = CESUS_WINDOW_WIDTH / 2;
@@ -59,7 +61,6 @@ void enqueue_census_transform(
 	const T *src,
 	int width,
 	int height,
-	int pitch,
 	cudaStream_t stream)
 {
 	printf("My cesus transform\n");
@@ -74,7 +75,7 @@ void enqueue_census_transform(
 	const dim3 gdim(1, grid_dim, 1);
 
 	
-	census_transform_kernel<<<gdim, bdim, 0, stream>>>(dest, src, width, height, pitch);
+	census_transform_kernel<<<gdim, bdim, 0, stream>>>(dest, src, width, height);
 #ifdef DEBUG
 	feature_type lookup[height * width];
 	printf("dest.size()=%d\n", sizeof(lookup)/sizeof(lookup[0]));
@@ -96,14 +97,13 @@ void CensusTransform<T>::enqueue(
 	const input_type *src,
 	int width,
 	int height,
-	int pitch,
 	cudaStream_t stream)
 {
 	if(m_feature_buffer.size() != static_cast<size_t>(width * height)){
 		m_feature_buffer = DeviceBuffer<feature_type>(width * height);
 	}
 	enqueue_census_transform(
-		m_feature_buffer.data(), src, width, height, pitch, stream);
+		m_feature_buffer.data(), src, width, height, stream);
 }
 
 template class CensusTransform<uint8_t>;

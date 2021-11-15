@@ -30,8 +30,6 @@ public:
 		const input_type *src_right,
 		int width,
 		int height,
-		int src_pitch,
-		int dst_pitch,
 		const Parameters& param);
 
 };

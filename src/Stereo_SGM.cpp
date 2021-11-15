@@ -9,15 +9,11 @@
 
 namespace sgm {
 
-    StereoSGM::StereoSGM(int width, int height, int disparity_size, int depth_bits, const Parameters& param) : StereoSGM(width, height, disparity_size, depth_bits, width, width, param) {}
-
-	StereoSGM::StereoSGM(int width, int height, int disparity_size, int depth_bits, int src_pitch, int dst_pitch, const Parameters& param) :
+	StereoSGM::StereoSGM(int width, int height, int disparity_size, int depth_bits, const Parameters& param) :
 		width_(width),
 		height_(height),
 		disparity_size_(disparity_size),
 		depth_bits_(depth_bits),
-		src_pitch_(src_pitch),
-		dst_pitch_(dst_pitch),
 		param_(param)
 	{
 		cuda_resource_allocate_all();
@@ -29,14 +25,14 @@ namespace sgm {
     
 	void StereoSGM::cuda_resource_allocate_all()
 	{
-		d_src_left.allocate(depth_bits_ / 8 * src_pitch_ * height_);
-		d_src_right.allocate(depth_bits_ / 8 * src_pitch_ * height_);
+		d_src_left.allocate(depth_bits_ / 8 * width_ * height_);
+		d_src_right.allocate(depth_bits_ / 8 * width_ * height_);
 
-		d_left_disp.allocate(dst_pitch_ * height_);
-		d_right_disp.allocate(dst_pitch_ * height_);
+		d_left_disp.allocate(width_ * height_);
+		d_right_disp.allocate(width_ * height_);
         
-        d_tmp_left_disp.allocate(dst_pitch_ * height_);
-		d_tmp_right_disp.allocate(dst_pitch_ * height_);
+        d_tmp_left_disp.allocate(width_ * height_);
+		d_tmp_right_disp.allocate(width_ * height_);
 	}
 	void StereoSGM::cuda_resource_fillZero()
 	{
@@ -88,7 +84,7 @@ namespace sgm {
 		engine->execute(
 			(uint16_t*)d_tmp_left_disp_data, (uint16_t*)d_tmp_right_disp_data,
 			d_input_left, d_input_right, 
-			width_, height_, src_pitch_, dst_pitch_, param_);
+			width_, height_, param_);
 		cuda_resource_free_all();
 	}
 }

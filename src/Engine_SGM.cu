@@ -1,8 +1,7 @@
 #include "Engine_SGM.hpp"
 #include "stdio.h"
-#include "census_transform.hpp"
-// #include "path_aggregation.hpp"
-// #include "winner_takes_all.hpp"
+#include "Census_transform.hpp"
+#include "Matching_cost.hpp"
 
 namespace sgm {
 
@@ -12,11 +11,13 @@ class Engine_SGM<T, MAX_DISPARITY>::Impl {
 private:
 	CensusTransform<T> m_census_left;
 	CensusTransform<T> m_census_right;
+	MatchingCost<MAX_DISPARITY> m_matching_cost;
 
 public:
 	Impl()
 		: m_census_left()
 		, m_census_right()
+		, m_matching_cost()
 	{ }
 
 	void enqueue() {}
@@ -27,14 +28,16 @@ public:
 		const input_type *src_right,
 		int width,
 		int height,
-		int src_pitch,
-		int dst_pitch,
 		const Parameters& param,
 		cudaStream_t stream)
 	{
 		printf("Stereo starts\n");
-		m_census_left.enqueue(src_left, width, height, src_pitch, stream);
-		m_census_right.enqueue(src_right, width, height, src_pitch, stream);
+		m_census_left.enqueue(src_left, width, height, stream);
+		m_census_right.enqueue(src_right, width, height, stream);
+		m_matching_cost.enqueue(
+			m_census_left.get_output(), 
+			m_census_right.get_output(), 
+			width, height);
 		printf("Stereo ends\n");
 	}
 
@@ -65,15 +68,12 @@ void Engine_SGM<T, MAX_DISPARITY>::execute(
 	const input_type *src_right,
 	int width,
 	int height,
-	int src_pitch,
-	int dst_pitch,
 	const Parameters& param)
 {
 	m_impl->enqueue(
 		dest_left, dest_right,
 		src_left, src_right,
 		width, height,
-		src_pitch, dst_pitch,
 		param,
 		0);
 	cudaStreamSynchronize(0);

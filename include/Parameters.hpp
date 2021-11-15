@@ -1,6 +1,11 @@
 #pragma once
 namespace sgm {
-    
+
+enum class PathType {
+	SCAN_4PATH, //>! Horizontal and vertical paths.
+	SCAN_8PATH  //>! Horizontal, vertical and oblique paths.
+};
+
 struct Parameters
 {
 	int P1;
