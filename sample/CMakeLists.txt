@@ -18,3 +18,6 @@ include_directories(../include)
 
 cuda_add_executable(stereo_test stereosgm_image.cpp)
 target_link_libraries(stereo_test sgm ${CUDA_LIBRARIES} ${OpenCV_LIBS})
+
+configure_file(../data/cone/im2.png im2.png COPYONLY)
+configure_file(../data/cone/im6.png im6.png COPYONLY)

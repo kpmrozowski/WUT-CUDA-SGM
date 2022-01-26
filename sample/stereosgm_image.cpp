@@ -15,8 +15,10 @@
 
 int main()
 {
-	cv::Mat  left = cv::imread("../../../data/cone/im2.png", CV_16U);
-	cv::Mat right = cv::imread("../../../data/cone/im6.png", CV_16U);
+	// cv::Mat  left = cv::imread("../../data/cone/im2.png", CV_16U);
+	// cv::Mat right = cv::imread("../../data/cone/im6.png", CV_16U);
+	cv::Mat  left = cv::imread("im2.png", CV_16U);
+	cv::Mat right = cv::imread("im6.png", CV_16U);
 
 	const int disp_size = 64;
 	const int P1 = 20;

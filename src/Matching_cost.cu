@@ -3,6 +3,7 @@
 #include "Matching_cost.hpp"
 #include <exception>
 #include <iostream>
+ #include "device_launch_parameters.h"
 
 namespace sgm {
 
@@ -18,6 +19,7 @@ __global__ void matching_cost_kernel(
 	const int x = threadIdx.x;
 	const int y = threadIdx.y + blockIdx.y * blockDim.y;
 	const int d = blockIdx.z;
+    
     if (x < width && y < height && 0 <= x - d) {
         feature_type pxL = ctL[x + y * width];
         feature_type pxR = ctR[x + y * width - d];

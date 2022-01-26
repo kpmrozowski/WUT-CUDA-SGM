@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/kmro/Documents/pw_mini/S2/cuda-labs/sgm/WUT-CUDA-SMG/out/build_terminal/src",
+  "command": "/bin/g++-10 --cuda-path=/usr/local/cuda-11.3 --cuda-gpu-arch=sm_61 -I/home/kmro/Documents/pw_mini/S2/cuda-labs/sgm/WUT-CUDA-SMG/src/../include -I/usr/local/cuda-11.3/include -O0 -Wall -std=c++14 -o CMakeFiles/sgm.dir/Stereo_SGM.cpp.o -c /home/kmro/Documents/pw_mini/S2/cuda-labs/sgm/WUT-CUDA-SMG/src/Stereo_SGM.cpp",
+  "file": "/home/kmro/Documents/pw_mini/S2/cuda-labs/sgm/WUT-CUDA-SMG/src/Stereo_SGM.cpp"
+},
+{
+  "directory": "/home/kmro/Documents/pw_mini/S2/cuda-labs/sgm/WUT-CUDA-SMG/out/build_terminal/sample",
+  "command": "/bin/g++-10 --cuda-path=/usr/local/cuda-11.3 --cuda-gpu-arch=sm_61 -I/home/kmro/Documents/pw_mini/S2/cuda-labs/sgm/WUT-CUDA-SMG/sample/../include -I/usr/local/cuda-11.3/include -isystem /usr/local/include/opencv4 -O3 -Wall -std=c++14 -o CMakeFiles/stereo_test.dir/stereosgm_image.cpp.o -c /home/kmro/Documents/pw_mini/S2/cuda-labs/sgm/WUT-CUDA-SMG/sample/stereosgm_image.cpp",
+  "file": "/home/kmro/Documents/pw_mini/S2/cuda-labs/sgm/WUT-CUDA-SMG/sample/stereosgm_image.cpp"
+}
+]
