@@ -11,7 +11,7 @@ message(STATUS "CUDA_ARCH: \"${CUDA_ARCH}\"")
 include_directories(../include)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_CXX_FLAGS "-O0 -Wall")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall")
 	set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++14")
 endif()
 
@@ -20,7 +20,6 @@ SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} ${CUDA_ARCH}")
 file(GLOB STEREOSRCS "*.cu" "*.cpp")
 
 CUDA_ADD_LIBRARY(sgm Stereo_SGM.cpp ${STEREOSRCS} STATIC)
-target_compile_definitions(sgm PUBLIC "$<$<CONFIG:DEBUG>:DEBUG>")
 
 install(
 	TARGETS sgm

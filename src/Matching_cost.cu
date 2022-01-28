@@ -50,7 +50,7 @@ int nextPowerOf2(int n)
 }
 
 template <size_t MAX_DISPARITY>
-void enqueue_matching_cost(
+void compute_matching_cost(
 	cost_type *dest,
 	const feature_type *ctL,
 	const feature_type *ctR,
@@ -69,7 +69,7 @@ void enqueue_matching_cost(
 	const dim3 gdim(1, grid_dim, MAX_DISPARITY);
 
 	matching_cost_kernel<<<gdim, bdim, 0>>>(dest, ctL, ctR, width, height);
-	
+
 #ifdef DEBUG
     cost_type lookup[height * width * 32];
     printf("dest.size()=%zd\n", sizeof(lookup)/sizeof(lookup[0]));
@@ -87,7 +87,7 @@ void enqueue_matching_cost(
     for (int x = 10; x < width - 10; ++x) {
         printf("x:%3.2d", x);
         for (int d = 0; d < 32; ++d) {
-            cost_type val = lookup[x + 300 * width + d * width * height];
+            cost_type val = lookup[x + 9 * width + d * width * height];
             // printf("cost[%d][300][%d]=%d\t", x, d, val);
             printf("%3.1d", val);
         }
@@ -103,7 +103,7 @@ MatchingCost<MAX_DISPARITY>::MatchingCost()
 { }
 
 template <size_t MAX_DISPARITY>
-void MatchingCost<MAX_DISPARITY>::enqueue(
+void MatchingCost<MAX_DISPARITY>::compute(
 	const feature_type *ctL,
 	const feature_type *ctR,
 	int width,
@@ -112,7 +112,7 @@ void MatchingCost<MAX_DISPARITY>::enqueue(
 	if(m_cost_cube.size() != static_cast<size_t>(width * height * MAX_DISPARITY)){
 		m_cost_cube = DeviceBuffer<cost_type>(width * height * MAX_DISPARITY);
 	}
-	enqueue_matching_cost<MAX_DISPARITY>(
+	compute_matching_cost<MAX_DISPARITY>(
 		m_cost_cube.data(), ctL, ctR, width, height);
 }
 

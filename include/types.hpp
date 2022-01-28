@@ -4,6 +4,7 @@
 #define SGM_TYPES_HPP
 
 #include <cstdint>
+#include <driver_types.h>
 
 namespace sgm {
 

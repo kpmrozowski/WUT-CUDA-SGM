@@ -19,11 +19,10 @@ public:
 		return m_feature_buffer.data();
 	}
 	
-	void enqueue(
+	void compute(
 		const T *src,
 		int width,
-		int height,
-		cudaStream_t stream);
+		int height);
 
 };
 

@@ -64,12 +64,11 @@ int nextPowerOf2(int n)
 }
 
 template <typename T>
-void enqueue_census_transform(
+void compute_census_transform(
 	feature_type *dest,
 	const T *src,
 	int width,
-	int height,
-	cudaStream_t stream)
+	int height)
 {
 	printf("My cesus transform\n");
     int num_threads = 1024;
@@ -88,7 +87,7 @@ void enqueue_census_transform(
 	int bit0_cpu[1] = {0};
 	cudaMemcpy(flag.data(), flag_cpu, sizeof(bool), cudaMemcpyHostToDevice);
 	cudaMemcpy(bit0.data(), bit0_cpu, sizeof(int), cudaMemcpyHostToDevice);
-	census_transform_kernel<<<gdim, bdim, 0, stream>>>(dest, src, width, height, flag.data(), bit0.data());
+	census_transform_kernel<<<gdim, bdim, 0>>>(dest, src, width, height, flag.data(), bit0.data());
 	feature_type lookup[height * width];
 	printf("dest.size()=%zd\n", sizeof(lookup)/sizeof(lookup[0]));
 	cudaMemcpy(lookup, dest, sizeof(feature_type) * height * width, cudaMemcpyDeviceToHost);
@@ -98,7 +97,7 @@ void enqueue_census_transform(
 	cudaMemcpy(bit0_cpu, bit0.data(), sizeof(int), cudaMemcpyDeviceToHost);
 	printf("bit0=%d\n", *bit0_cpu);
 #else
-	census_transform_kernel<<<gdim, bdim, 0, stream>>>(dest, src, width, height);
+	census_transform_kernel<<<gdim, bdim, 0>>>(dest, src, width, height);
 #endif
 }
 
@@ -111,17 +110,16 @@ CensusTransform<T>::CensusTransform()
 { }
 
 template <typename T>
-void CensusTransform<T>::enqueue(
+void CensusTransform<T>::compute(
 	const T *src,
 	int width,
-	int height,
-	cudaStream_t stream)
+	int height)
 {
 	if(m_feature_buffer.size() != static_cast<size_t>(width * height)){
 		m_feature_buffer = DeviceBuffer<feature_type>(width * height);
 	}
-	enqueue_census_transform(
-		m_feature_buffer.data(), src, width, height, stream);
+	compute_census_transform(
+		m_feature_buffer.data(), src, width, height);
 }
 
 template class CensusTransform<uint8_t>;

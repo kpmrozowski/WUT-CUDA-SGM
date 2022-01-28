@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "Census_transform.hpp"
 #include "Matching_cost.hpp"
+#include "Energy.hpp"
 
 namespace sgm {
 
@@ -12,6 +13,7 @@ private:
 	CensusTransform<T> m_census_left;
 	CensusTransform<T> m_census_right;
 	MatchingCost<MAX_DISPARITY> m_matching_cost;
+	EnergyAgregator<MAX_DISPARITY> m_energy_agregator;
 
 public:
 	Impl()
@@ -20,8 +22,8 @@ public:
 		, m_matching_cost()
 	{ }
 
-	void enqueue() {}
-	void enqueue(
+	void compute() {}
+	void compute(
 		output_type *dest_left,
 		output_type *dest_right,
 		const input_type *src_left,
@@ -32,12 +34,16 @@ public:
 		cudaStream_t stream)
 	{
 		printf("Stereo starts\n");
-		m_census_left.enqueue(src_left, width, height, stream);
-		m_census_right.enqueue(src_right, width, height, stream);
-		m_matching_cost.enqueue(
+		m_census_left.compute(src_left, width, height);
+		m_census_right.compute(src_right, width, height);
+		m_matching_cost.compute(
 			m_census_left.get_output(), 
 			m_census_right.get_output(), 
 			width, height);
+		m_energy_agregator.compute(
+			m_matching_cost.get_output(),
+			width, height, param.num_paths,
+			param.P1, param.P2, param.min_disp, stream);
 		printf("Stereo ends\n");
 	}
 
@@ -56,8 +62,7 @@ Engine_SGM<T, MAX_DISPARITY>::~Engine_SGM() = default;
 template <typename T, size_t MAX_DISPARITY>
 void Engine_SGM<T, MAX_DISPARITY>::execute()
 {
-	m_impl->enqueue();
-	cudaStreamSynchronize(0);
+	m_impl->compute();
 }
 
 template <typename T, size_t MAX_DISPARITY>
@@ -70,12 +75,11 @@ void Engine_SGM<T, MAX_DISPARITY>::execute(
 	int height,
 	const Parameters& param)
 {
-	m_impl->enqueue(
+	m_impl->compute(
 		dest_left, dest_right,
 		src_left, src_right,
 		width, height,
-		param,
-		0);
+		param, 0);
 	cudaStreamSynchronize(0);
 }
 

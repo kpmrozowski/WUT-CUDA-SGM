@@ -19,7 +19,7 @@ public:
 		return m_cost_cube.data();
 	}
 	
-	void enqueue(
+	void compute(
         const feature_type *ctL,
         const feature_type *ctR,
 		int width,
