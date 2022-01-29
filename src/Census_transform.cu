@@ -51,6 +51,7 @@ __global__ void census_transform_kernel(
 	// 		dest[x + y * width] = 0;
 	// }
 }
+
 int nextPowerOf2(int n)
 {
     n--;

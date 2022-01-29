@@ -31,4 +31,6 @@ struct Parameters
 	{ }
 };
 
+int nextPowerOf2(int n);
+
 }
