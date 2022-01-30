@@ -188,7 +188,7 @@ void compute_energy_down2up(
     cost_type lookup[height * width * dsize];
     // cost_type lookup_in[height * width * dsize];
     printf("dest.size()=%zd\n", sizeof(lookup)/sizeof(lookup[0]));
-    cudaMemcpy(lookup, dest+start, sizeof(cost_type) * height * width * dsize, cudaMemcpyDeviceToHost);
+    cudaMemcpy(lookup, dest+start * height * width, sizeof(cost_type) * height * width * dsize, cudaMemcpyDeviceToHost);
     // cudaMemcpy(lookup_in, cost_in+start, sizeof(cost_type) * height * width * dsize, cudaMemcpyDeviceToHost);
     cost_type max = 0;
     for (int x = 0; x < width; ++x) {
