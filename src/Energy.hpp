@@ -7,15 +7,13 @@
 
 namespace sgm {
 
-static constexpr unsigned int WARP_SIZE = 32u;
-
 template <size_t MAX_DISPARITY>
 class EnergyAgregator {
 
 private:
 	static const unsigned int MAX_NUM_PATHS = 8;
 
-	DeviceBuffer<cost_type> m_energy_buffer;
+	DeviceBuffer<cost_sum_type> m_energy_buffer;
 	cudaStream_t m_streams[MAX_NUM_PATHS];
 	cudaEvent_t m_events[MAX_NUM_PATHS];
 	
@@ -23,7 +21,7 @@ public:
 	EnergyAgregator();
 	~EnergyAgregator();
 
-	const cost_type *get_output() const {
+	const cost_sum_type *get_output() const {
 		return m_energy_buffer.data();
 	}
 
@@ -128,6 +126,15 @@ void compute_energy_downL2upR(
 	unsigned int p1,
 	unsigned int p2,
 	int min_disp,
+	cudaStream_t stream);
+
+template <unsigned int MAX_DISPARITY>
+void sum_energy_all_paths(
+	cost_sum_type *dest,
+	const cost_type *buffer_in,
+	int width,
+	int height,
+	int num_paths,
 	cudaStream_t stream);
 }
 

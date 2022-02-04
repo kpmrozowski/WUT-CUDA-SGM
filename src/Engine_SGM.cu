@@ -46,7 +46,6 @@ public:
 			param.P1, param.P2, param.min_disp, stream);
 		printf("Stereo ends\n");
 	}
-
 };
 
 
