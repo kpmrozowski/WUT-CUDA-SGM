@@ -113,7 +113,7 @@ void MatchingCost<MAX_DISPARITY>::compute(
 		m_cost_cube = DeviceBuffer<cost_type>(width * height * MAX_DISPARITY);
 	}
 	compute_matching_cost<MAX_DISPARITY>(
-		m_cost_cube.data(), ctL, ctR, width, height);
+		m_cost_cube.mutable_data(), ctL, ctR, width, height);
 }
 
 template class MatchingCost< 64>;

@@ -24,7 +24,7 @@ int main()
 	const int P1 = 20;
 	const int P2 = 64;
 	const int num_paths = 8;
-	const int min_disp = 0;
+	const int min_disp = 3;
 	const int LR_max_diff = 1;
 
 	ASSERT_MSG(!left.empty() && !right.empty(), "imread failed.");

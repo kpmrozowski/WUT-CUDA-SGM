@@ -3,6 +3,7 @@
 #include "Census_transform.hpp"
 #include "Matching_cost.hpp"
 #include "Energy.hpp"
+#include "WinnerTakesAll.hpp"
 
 namespace sgm {
 
@@ -14,6 +15,7 @@ private:
 	CensusTransform<T> m_census_right;
 	MatchingCost<MAX_DISPARITY> m_matching_cost;
 	EnergyAgregator<MAX_DISPARITY> m_energy_agregator;
+	WinnerTakesAll m_winner_takes_all;
 
 public:
 	Impl()
@@ -25,7 +27,6 @@ public:
 	void compute() {}
 	void compute(
 		output_type *dest_left,
-		output_type *dest_right,
 		const input_type *src_left,
 		const input_type *src_right,
 		int width,
@@ -44,6 +45,9 @@ public:
 			m_matching_cost.get_output(),
 			width, height, param.num_paths,
 			param.P1, param.P2, param.min_disp, stream);
+		m_winner_takes_all.compute(
+			dest_left, m_energy_agregator.get_output(),
+			width, height, param.min_disp, MAX_DISPARITY, stream);
 		printf("Stereo ends\n");
 	}
 };
@@ -67,7 +71,6 @@ void Engine_SGM<T, MAX_DISPARITY>::execute()
 template <typename T, size_t MAX_DISPARITY>
 void Engine_SGM<T, MAX_DISPARITY>::execute(
 	output_type *dest_left,
-	output_type *dest_right,
 	const input_type *src_left,
 	const input_type *src_right,
 	int width,
@@ -75,7 +78,7 @@ void Engine_SGM<T, MAX_DISPARITY>::execute(
 	const Parameters& param)
 {
 	m_impl->compute(
-		dest_left, dest_right,
+		dest_left,
 		src_left, src_right,
 		width, height,
 		param, 0);

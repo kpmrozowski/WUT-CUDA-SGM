@@ -19,9 +19,7 @@ public:
 	DeviceBuffer<uint8_t> d_src_left;
 	DeviceBuffer<uint8_t> d_src_right;
 	DeviceBuffer<uint16_t> d_left_disp;
-	DeviceBuffer<uint16_t> d_right_disp;
 	DeviceBuffer<uint16_t> d_tmp_left_disp;
-	DeviceBuffer<uint16_t> d_tmp_right_disp;
 
 	/**
 	* @param width Image's width.

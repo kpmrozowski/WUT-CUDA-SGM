@@ -62,13 +62,13 @@ namespace sgm {
 			throw std::logic_error("depth bits must be 8 or 16, and disparity size must be 64 or 128");
 		
 		const void *d_input_left, *d_input_right;
-		CudaSafeCall(cudaMemcpy(d_src_left.data(), left_pixels, d_src_left.size(), cudaMemcpyHostToDevice));
-		CudaSafeCall(cudaMemcpy(d_src_right.data(), right_pixels, d_src_right.size(), cudaMemcpyHostToDevice));
+		CudaSafeCall(cudaMemcpy(d_src_left.mutable_data(), left_pixels, d_src_left.size(), cudaMemcpyHostToDevice));
+		CudaSafeCall(cudaMemcpy(d_src_right.mutable_data(), right_pixels, d_src_right.size(), cudaMemcpyHostToDevice));
 		d_input_left = d_src_left.data();
 		d_input_right = d_src_right.data();
 		
-		void* d_tmp_left_disp_data = d_tmp_left_disp.data();
-		void* d_tmp_right_disp_data = d_tmp_right_disp.data();
+		void* d_tmp_left_disp_data = d_tmp_left_disp.mutable_data();
+		void* d_tmp_right_disp_data = d_tmp_right_disp.mutable_data();
 		// const void *d_src_left_data = d_src_left.data();
 		// const void *d_src_right_data = d_src_right.data();
 

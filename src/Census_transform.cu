@@ -86,9 +86,9 @@ void compute_census_transform(
 	auto bit0 = DeviceBuffer<int>(1);
 	bool flag_cpu[1] = {false};
 	int bit0_cpu[1] = {0};
-	cudaMemcpy(flag.data(), flag_cpu, sizeof(bool), cudaMemcpyHostToDevice);
-	cudaMemcpy(bit0.data(), bit0_cpu, sizeof(int), cudaMemcpyHostToDevice);
-	census_transform_kernel<<<gdim, bdim, 0>>>(dest, src, width, height, flag.data(), bit0.data());
+	cudaMemcpy(flag.mutable_data(), flag_cpu, sizeof(bool), cudaMemcpyHostToDevice);
+	cudaMemcpy(bit0.mutable_data(), bit0_cpu, sizeof(int), cudaMemcpyHostToDevice);
+	census_transform_kernel<<<gdim, bdim, 0>>>(dest, src, width, height, flag.mutable_data(), bit0.mutable_data());
 	feature_type lookup[height * width];
 	printf("dest.size()=%zd\n", sizeof(lookup)/sizeof(lookup[0]));
 	cudaMemcpy(lookup, dest, sizeof(feature_type) * height * width, cudaMemcpyDeviceToHost);
@@ -120,7 +120,7 @@ void CensusTransform<T>::compute(
 		m_feature_buffer = DeviceBuffer<feature_type>(width * height);
 	}
 	compute_census_transform(
-		m_feature_buffer.data(), src, width, height);
+		m_feature_buffer.mutable_data(), src, width, height);
 }
 
 template class CensusTransform<uint8_t>;

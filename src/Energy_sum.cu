@@ -15,17 +15,20 @@ __global__ void sum_energy_kernel(
     const unsigned int buffer_step = width * height * MAX_DISPARITY;
     const unsigned int x = threadIdx.x + blockIdx.x * blockDim.x;
     const unsigned int y = threadIdx.y;
-    // const unsigned int d = blockIdx.z;
-    // for (unsigned int path = 0; path < num_paths; ++path) {
-    //     sum += buffer_in[x + y * width + d * width_height + path * buffer_step];
-    // }
-    for (unsigned int d = 0; d < MAX_DISPARITY; ++d) {
-        cost_sum_type sum = 0;
-        for (unsigned int path = 0; path < num_paths; ++path) {
-            sum += buffer_in[x + y * width + d * width_height + path * buffer_step];
-        }
-        dest[x + y * width + d * width_height] = sum;
+    const unsigned int d = blockIdx.z;
+    if (x > width -1 || y > height - 1) return;
+    cost_sum_type sum = 0;
+    for (unsigned int path = 0; path < num_paths; ++path) {
+        sum += buffer_in[x + y * width + d * width_height + path * buffer_step];
     }
+    dest[x + y * width + d * width_height] = sum;
+    // for (unsigned int d = 0; d < MAX_DISPARITY; ++d) {
+    //     cost_sum_type sum = 0;
+    //     for (unsigned int path = 0; path < num_paths; ++path) {
+    //         sum += buffer_in[x + y * width + d * width_height + path * buffer_step];
+    //     }
+    //     dest[x + y * width + d * width_height] = sum;
+    // }
     
 }
 
@@ -48,7 +51,7 @@ void sum_energy_all_paths(
 		grid_dim += 1;
 	}
 	const dim3 bdim(block_x_dim, block_y_dim, 1);
-	const dim3 gdim(grid_dim, 1, 1);
+	const dim3 gdim(grid_dim, 1, MAX_DISPARITY);
 	sum_energy_kernel<MAX_DISPARITY><<<gdim, bdim, 0, stream>>>(
 		dest, buffer_in, width, height, num_paths);
 #ifdef DEBUG

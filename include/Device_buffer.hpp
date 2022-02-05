@@ -85,7 +85,7 @@ public:
 		return m_data;
 	}
 
-	value_type *data(){
+	value_type *mutable_data(){
 		return m_data;
 	}
 

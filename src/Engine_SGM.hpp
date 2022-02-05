@@ -25,7 +25,6 @@ public:
 	void execute();
 	void execute(
 		output_type *dest_left,
-		output_type *dest_right,
 		const input_type *src_left,
 		const input_type *src_right,
 		int width,
