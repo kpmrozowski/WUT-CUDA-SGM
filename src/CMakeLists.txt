@@ -11,7 +11,7 @@ message(STATUS "CUDA_ARCH: \"${CUDA_ARCH}\"")
 include_directories(../include)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall")
 	set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++14")
 endif()
 

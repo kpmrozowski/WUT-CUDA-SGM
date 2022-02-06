@@ -42,30 +42,30 @@ void EnergyAgregator<MAX_DISPARITY>::compute(
 	cudaStreamSynchronize(stream);
 
 	switch (num_paths) {
-		// oblique
+		// horizontal
 		case 8:
-			compute_energy_downL2upR<MAX_DISPARITY>(
+			compute_energy_R2L<MAX_DISPARITY>(
 				steps_buffer.mutable_data() + 7 * buffer_step,
 				cost_in, width, height, p1, p2, min_disp, m_streams[7]);
 		case 7:
-			compute_energy_downR2upL<MAX_DISPARITY>(
+			compute_energy_L2R<MAX_DISPARITY>(
 				steps_buffer.mutable_data() + 6 * buffer_step,
 				cost_in, width, height, p1, p2, min_disp, m_streams[6]);
+		// oblique
 		case 6:
-			compute_energy_upR2downL<MAX_DISPARITY>(
+			compute_energy_downL2upR<MAX_DISPARITY>(
 				steps_buffer.mutable_data() + 5 * buffer_step,
 				cost_in, width, height, p1, p2, min_disp, m_streams[5]);
 		case 5:
-			compute_energy_upL2downR<MAX_DISPARITY>(
+			compute_energy_downR2upL<MAX_DISPARITY>(
 				steps_buffer.mutable_data() + 4 * buffer_step,
 				cost_in, width, height, p1, p2, min_disp, m_streams[4]);
-		// horizontal
 		case 4:
-			compute_energy_R2L<MAX_DISPARITY>(
+			compute_energy_upR2downL<MAX_DISPARITY>(
 				steps_buffer.mutable_data() + 3 * buffer_step,
 				cost_in, width, height, p1, p2, min_disp, m_streams[3]);
 		case 3:
-			compute_energy_L2R<MAX_DISPARITY>(
+			compute_energy_upL2downR<MAX_DISPARITY>(
 				steps_buffer.mutable_data() + 2 * buffer_step,
 				cost_in, width, height, p1, p2, min_disp, m_streams[2]);
 		// vertical

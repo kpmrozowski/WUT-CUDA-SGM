@@ -1,8 +1,10 @@
 #pragma once
 namespace sgm {
 
-static constexpr int CESUS_WINDOW_WIDTH  = 9;
-static constexpr int CESUS_WINDOW_HEIGHT = 7;
+static constexpr int CESUS_WINDOW_WIDTH  = 5; // 9
+static constexpr int CESUS_WINDOW_HEIGHT = 5; // 7
+static constexpr int MEDIAN_WINDOW_WIDTH  = 3;
+static constexpr int MEDIAN_WINDOW_HEIGHT = 5;
 
 struct Parameters
 {

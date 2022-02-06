@@ -10,7 +10,6 @@ WinnerTakesAll::WinnerTakesAll()
 }
 
 void WinnerTakesAll::compute(
-	output_type *dest_left,
 	const cost_sum_type *cost_in,
 	int width,
 	int height,
@@ -23,11 +22,8 @@ void WinnerTakesAll::compute(
 		m_disparities = DeviceBuffer<cost_sum_type>(buffer_step);
 	}
 	choose_disparities(
-		dest_left, cost_in, width, height, min_disparity,
+		m_disparities.mutable_data(), cost_in, width, height, min_disparity,
 		max_disparity, stream);
-	// find2largest(
-	// 	m_disparities.mutable_data(), cost_in, width, height, min_disparity,
-	// 	max_disparity, stream);
 }
 
 }

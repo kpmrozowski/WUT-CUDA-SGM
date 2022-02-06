@@ -6,14 +6,10 @@ set(CMAKE_C_COMPILER "/bin/gcc-10")
 set(CMAKE_CXX_COMPILER "/bin/g++-10")
 set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda-11.6")
 option(ENABLE_SAMPLE "Build the sample" ON)
-set(DEBUG ON)
+set(DEBUG OFF)
 
-
-# add_compile_options("$<$<CONFIG:DEBUG>:--cuda-gpu-arch=sm_61>")
-# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 if(DEBUG)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG")
-  # add_compile_options("$<$<CONFIG:DEBUG>:-DDEBUG>")
 endif()
 
 set(CUDA_ARCH "-arch=sm_61" CACHE STRING "Value of the NVCC -arch option.")

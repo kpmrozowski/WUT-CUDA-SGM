@@ -3,7 +3,8 @@
 #include "Census_transform.hpp"
 #include "Matching_cost.hpp"
 #include "Energy.hpp"
-#include "WinnerTakesAll.hpp"
+#include "Winner_Takes_All.hpp"
+#include "Median_filter.hpp"
 
 namespace sgm {
 
@@ -16,6 +17,7 @@ private:
 	MatchingCost<MAX_DISPARITY> m_matching_cost;
 	EnergyAgregator<MAX_DISPARITY> m_energy_agregator;
 	WinnerTakesAll m_winner_takes_all;
+    MedianFilter m_median_filter;
 
 public:
 	Impl()
@@ -46,8 +48,10 @@ public:
 			width, height, param.num_paths,
 			param.P1, param.P2, param.min_disp, stream);
 		m_winner_takes_all.compute(
-			dest_left, m_energy_agregator.get_output(),
+			m_energy_agregator.get_output(),
 			width, height, param.min_disp, MAX_DISPARITY, stream);
+        m_median_filter.compute(
+            dest_left, m_winner_takes_all.get_output(), width, height);
 		printf("Stereo ends\n");
 	}
 };

@@ -15,8 +15,11 @@ private:
 public:
 	WinnerTakesAll();
 
+	const output_type *get_output() const {
+		return m_disparities.data();
+	}
+
 	void compute(
-		output_type *dest_left,
 		const cost_sum_type *cost_in,
 		int width,
 		int height,

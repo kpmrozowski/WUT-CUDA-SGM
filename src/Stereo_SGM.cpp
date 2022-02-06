@@ -28,10 +28,8 @@ namespace sgm {
 		d_src_right.allocate(depth_bits_ / 8 * width_ * height_);
 
 		d_left_disp.allocate(width_ * height_);
-		d_right_disp.allocate(width_ * height_);
         
         d_tmp_left_disp.allocate(width_ * height_);
-		d_tmp_right_disp.allocate(width_ * height_);
 	}
 
 	void StereoSGM::cuda_resource_free_all()
@@ -39,9 +37,7 @@ namespace sgm {
 		d_src_left.destroy();
 		d_src_right.destroy();
         d_left_disp.destroy();
-		d_right_disp.destroy();
 		d_tmp_left_disp.destroy();
-		d_tmp_right_disp.destroy();
 	}
 	
 	void StereoSGM::execute(void* dst, const void* left_pixels, const void* right_pixels)
@@ -68,15 +64,15 @@ namespace sgm {
 		d_input_right = d_src_right.data();
 		
 		void* d_tmp_left_disp_data = d_tmp_left_disp.mutable_data();
-		void* d_tmp_right_disp_data = d_tmp_right_disp.mutable_data();
 		// const void *d_src_left_data = d_src_left.data();
 		// const void *d_src_right_data = d_src_right.data();
 
 		// engine->execute();
 		engine->execute(
-			(uint16_t*)d_tmp_left_disp_data, (uint16_t*)d_tmp_right_disp_data,
+			(uint16_t*)d_tmp_left_disp_data,
 			d_input_left, d_input_right, 
 			width_, height_, param_);
+		CudaSafeCall(cudaMemcpy(dst, d_tmp_left_disp_data, sizeof(uint16_t) * width_ * height_, cudaMemcpyDeviceToHost));
 		cuda_resource_free_all();
 	}
 }

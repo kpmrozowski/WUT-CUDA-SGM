@@ -23,7 +23,7 @@ int main()
 	const int disp_size = 64;
 	const int P1 = 20;
 	const int P2 = 64;
-	const int num_paths = 8;
+	const int num_paths = 3;
 	const int min_disp = 3;
 	const int LR_max_diff = 1;
 
@@ -32,7 +32,7 @@ int main()
 	printf("type=%d\n", left.type());
 	ASSERT_MSG(left.type() == CV_8U || left.type() == CV_16U, "input image format must be CV_8U or CV_16U.");
 	ASSERT_MSG(disp_size == 64 || disp_size == 128 || disp_size == 256, "disparity size must be 64, 128 or 256.");
-	ASSERT_MSG(num_paths == 4 || num_paths == 8, "number of scanlines must be 4 or 8.");
+	// ASSERT_MSG(num_paths == 4 || num_paths == 8, "number of scanlines must be 4 or 8.");
 
 	const int depth = left.type() == CV_8U ? 8 : 16;
 
@@ -43,37 +43,37 @@ int main()
 
 	ssgm.execute(disparity.data, left.data, right.data);
 
-	// // create mask for invalid disp
+	// create mask for invalid disp
 	// cv::Mat mask = disparity == ssgm.get_invalid_disparity();
 
-	// // show image
-	// cv::Mat disparity_8u, disparity_color;
-	// disparity.convertTo(disparity_8u, CV_8U, 255. / disp_size);
-	// cv::applyColorMap(disparity_8u, disparity_color, cv::COLORMAP_JET);
+	// show image
+	cv::Mat disparity_8u, disparity_color;
+	disparity.convertTo(disparity_8u, CV_8U, 255. / disp_size);
+	cv::applyColorMap(disparity_8u, disparity_color, cv::COLORMAP_JET);
 	// disparity_8u.setTo(0, mask);
 	// disparity_color.setTo(cv::Scalar(0, 0, 0), mask);
-	// if (left.type() != CV_8U)
-	// 	cv::normalize(left, left, 0, 255, cv::NORM_MINMAX, CV_8U);
+	if (left.type() != CV_8U)
+		cv::normalize(left, left, 0, 255, cv::NORM_MINMAX, CV_8U);
 
-	// std::vector<cv::Mat> images = { disparity_8u, disparity_color, left };
-	// std::vector<std::string> titles = { "disparity", "disparity color", "input" };
+	std::vector<cv::Mat> images = { disparity_8u, disparity_color, left };
+	std::vector<std::string> titles = { "disparity", "disparity color", "input" };
 
-	// std::cout << "Hot keys:" << std::endl;
-	// std::cout << "\tESC - quit the program" << std::endl;
-	// std::cout << "\ts - switch display (disparity | colored disparity | input image)" << std::endl;
+	std::cout << "Hot keys:" << std::endl;
+	std::cout << "\tESC - quit the program" << std::endl;
+	std::cout << "\ts - switch display (disparity | colored disparity | input image)" << std::endl;
 
-	// int mode = 0;
-	// while (true) {
+	int mode = 0;
+	while (true) {
 
-	// 	cv::setWindowTitle("image", titles[mode]);
-	// 	cv::imshow("image", images[mode]);
+		cv::setWindowTitle("image", titles[mode]);
+		cv::imshow("image", images[mode]);
 
-	// 	const char c = cv::waitKey(0);
-	// 	if (c == 's')
-	// 		mode = (mode < 2 ? mode + 1 : 0);
-	// 	if (c == 27)
-	// 		break;
-	// }
+		const char c = cv::waitKey(0);
+		if (c == 's')
+			mode = (mode < 2 ? mode + 1 : 0);
+		if (c == 27)
+			break;
+	}
 
 	return 0;
 }
