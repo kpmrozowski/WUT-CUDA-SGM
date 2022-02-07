@@ -36,7 +36,7 @@ public:
 		const Parameters& param,
 		cudaStream_t stream)
 	{
-		printf("Stereo starts\n");
+		// printf("My Stereo starts\n");
 		m_census_left.compute(src_left, width, height);
 		m_census_right.compute(src_right, width, height);
 		m_matching_cost.compute(
@@ -52,7 +52,7 @@ public:
 			width, height, param.min_disp, MAX_DISPARITY, stream);
         m_median_filter.compute(
             dest_left, m_winner_takes_all.get_output(), width, height);
-		printf("Stereo ends\n");
+		// printf("My Stereo ends\n");
 	}
 };
 

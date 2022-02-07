@@ -104,7 +104,7 @@ void compute_energy_upL2downR(
 	int min_disp,
 	cudaStream_t stream)
 {
-	printf("My compute_energy_upL2downR\n");
+	// printf("My compute_energy_upL2downR\n");
 	cudaMemcpy(dest, cost_in, sizeof(cost_type) * height * width * MAX_DISPARITY, cudaMemcpyDeviceToDevice);
     int num_threads = 1024;
 	int block_d_dim = nextPowerOf2(MAX_DISPARITY);
@@ -121,48 +121,48 @@ void compute_energy_upL2downR(
 	// const dim3 gdim(height + width - 2, 1, 1);
 	aggregate_oblique_path_kernel<1, 1, MAX_DISPARITY><<<gdim, bdim, 0, stream>>>(
 		dest, cost_in, width, height, p1, p2, min_disp);
-// #ifdef DEBUG
-// 	int y0=373, offset=0, start=offset, end=48+offset, dsize = end-start;
-//     cost_type lookup[height * width * dsize];
-//     // cost_type lookup_in[height * width * dsize];
-//     printf("dest.size()=%zd\n", sizeof(lookup)/sizeof(lookup[0]));
-//     cudaMemcpy(lookup, dest+start * height * width, sizeof(cost_type) * height * width * dsize, cudaMemcpyDeviceToHost);
-//     // cudaMemcpy(lookup_in, cost_in+start, sizeof(cost_type) * height * width * dsize, cudaMemcpyDeviceToHost);
-//     cost_type max = 0;
-//     for (int x = 0; x < width; ++x) {
-//         for (int y = 0; y < height; ++y) {
-//             for (int d = start; d < end; ++d) {
-//                 cost_type val = lookup[x + y * width + (d-start) * width * height];
-//                 if (max < val && val < static_cast<cost_type>(UINT8_MAX)) max = val;
-//             }
-//         }
-//     }
-//     printf("max=%d\n", max);
-//     for (int x = 0; x < width; ++x) {
-//         printf("x:%3.3d", x);
-//         for (int d = start; d < end; ++d) {
-//             cost_type val = lookup[x + y0 * width + (d-start) * width * height];
-//             // cost_type val2 = lookup_in[x + y0 * width + (d-start) * width * height];
-//             // printf("cost[%d][300][%d]=%d\t", x, d, val);
-//             printf("%4.1d", val);
-//             // printf("%3.1d", val - val2);
-//         }
-//         printf("\n");
-//     }
-// 	// int d0 = 5;
-//     // for (int y = 0; y < height; ++y) {
-//     //     printf("y:%3.3d", y);
-//     //     for (int x = 0; x < width; ++x) {
-//     //         cost_type val = lookup[x + y * width + (d0-start) * width * height];
-//     //         // cost_type val2 = lookup_in[x + y0 * width + (d-start) * width * height];
-//     //         // printf("cost[%d][300][%d]=%d\t", x, d, val);
-//     //         printf("%4.1d", val);
-//     //         // printf("%3.1d", val - val2);
-//     //     }
-//     //     printf("\n");
-//     // }
-// #endif
-	printf("My compute_energy_upL2downR end\n");
+#ifdef DEBUG
+	int y0=373, offset=0, start=offset, end=48+offset, dsize = end-start;
+    cost_type lookup[height * width * dsize];
+    // cost_type lookup_in[height * width * dsize];
+    printf("dest.size()=%zd\n", sizeof(lookup)/sizeof(lookup[0]));
+    cudaMemcpy(lookup, dest+start * height * width, sizeof(cost_type) * height * width * dsize, cudaMemcpyDeviceToHost);
+    // cudaMemcpy(lookup_in, cost_in+start, sizeof(cost_type) * height * width * dsize, cudaMemcpyDeviceToHost);
+    cost_type max = 0;
+    for (int x = 0; x < width; ++x) {
+        for (int y = 0; y < height; ++y) {
+            for (int d = start; d < end; ++d) {
+                cost_type val = lookup[x + y * width + (d-start) * width * height];
+                if (max < val && val < static_cast<cost_type>(UINT8_MAX)) max = val;
+            }
+        }
+    }
+    printf("max=%d\n", max);
+    for (int x = 0; x < width; ++x) {
+        printf("x:%3.3d", x);
+        for (int d = start; d < end; ++d) {
+            cost_type val = lookup[x + y0 * width + (d-start) * width * height];
+            // cost_type val2 = lookup_in[x + y0 * width + (d-start) * width * height];
+            // printf("cost[%d][300][%d]=%d\t", x, d, val);
+            printf("%4.1d", val);
+            // printf("%3.1d", val - val2);
+        }
+        printf("\n");
+    }
+	int d0 = 5;
+    for (int y = 0; y < height; ++y) {
+        printf("y:%3.3d", y);
+        for (int x = 0; x < width; ++x) {
+            cost_type val = lookup[x + y * width + (d0-start) * width * height];
+            // cost_type val2 = lookup_in[x + y0 * width + (d-start) * width * height];
+            // printf("cost[%d][300][%d]=%d\t", x, d, val);
+            printf("%4.1d", val);
+            // printf("%3.1d", val - val2);
+        }
+        printf("\n");
+    }
+#endif
+	// printf("My compute_energy_upL2downR end\n");
 }
 
 template <unsigned int MAX_DISPARITY>
@@ -176,7 +176,7 @@ void compute_energy_upR2downL(
 	int min_disp,
 	cudaStream_t stream)
 {
-	printf("My compute_energy_upR2downL\n");
+	// printf("My compute_energy_upR2downL\n");
 	cudaMemcpy(dest, cost_in, sizeof(cost_type) * height * width * MAX_DISPARITY, cudaMemcpyDeviceToDevice);
     int num_threads = 1024;
 	int block_d_dim = nextPowerOf2(MAX_DISPARITY);
@@ -191,7 +191,7 @@ void compute_energy_upR2downL(
 	const dim3 gdim(grid_dim, 1, 1);
 	aggregate_oblique_path_kernel<-1, 1, MAX_DISPARITY><<<gdim, bdim, 0, stream>>>(
 		dest, cost_in, width, height, p1, p2, min_disp);
-	printf("My compute_energy_upR2downL end\n");
+	// printf("My compute_energy_upR2downL end\n");
 }
 
 template <unsigned int MAX_DISPARITY>
@@ -205,7 +205,7 @@ void compute_energy_downR2upL(
 	int min_disp,
 	cudaStream_t stream)
 {
-	printf("My compute_energy_downR2upL\n");
+	// printf("My compute_energy_downR2upL\n");
     int num_threads = 1024;
 	int block_d_dim = nextPowerOf2(MAX_DISPARITY);
 	int block_xydim = num_threads / block_d_dim;
@@ -219,7 +219,7 @@ void compute_energy_downR2upL(
 	const dim3 gdim(grid_dim, 1, 1);
 	aggregate_oblique_path_kernel<-1, -1, MAX_DISPARITY><<<gdim, bdim, 0, stream>>>(
 		dest, cost_in, width, height, p1, p2, min_disp);
-	printf("My compute_energy_downR2upL end\n");
+	// printf("My compute_energy_downR2upL end\n");
 }
 
 template <unsigned int MAX_DISPARITY>
@@ -233,7 +233,7 @@ void compute_energy_downL2upR(
 	int min_disp,
 	cudaStream_t stream)
 {
-	printf("My compute_energy_downL2upR\n");
+	// printf("My compute_energy_downL2upR\n");
     int num_threads = 1024;
 	int block_d_dim = nextPowerOf2(MAX_DISPARITY);
 	int block_xydim = num_threads / block_d_dim;
@@ -247,7 +247,7 @@ void compute_energy_downL2upR(
 	const dim3 gdim(grid_dim, 1, 1);
 	aggregate_oblique_path_kernel<1, -1, MAX_DISPARITY><<<gdim, bdim, 0, stream>>>(
 		dest, cost_in, width, height, p1, p2, min_disp);
-	printf("My compute_energy_downL2upR end\n");
+	// printf("My compute_energy_downL2upR end\n");
 }
 
 

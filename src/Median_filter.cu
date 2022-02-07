@@ -48,7 +48,7 @@ void compute_median_filter(
 	int width,
 	int height)
 {
-	printf("My median filter\n");
+	// printf("My median filter\n");
     int num_threads = 1024;
 	int block_x_dim = nextPowerOf2(width);
 	int block_y_dim = num_threads / block_x_dim;

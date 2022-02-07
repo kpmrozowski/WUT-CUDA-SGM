@@ -71,7 +71,7 @@ void compute_census_transform(
 	int width,
 	int height)
 {
-	printf("My cesus transform\n");
+	// printf("My cesus transform\n");
     int num_threads = 1024;
 	int block_x_dim = nextPowerOf2(width);
 	int block_y_dim = num_threads / block_x_dim;

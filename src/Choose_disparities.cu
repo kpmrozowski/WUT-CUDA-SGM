@@ -42,7 +42,7 @@ void choose_disparities(
 	int max_disparity,
 	cudaStream_t stream)
 {
-	printf("My choose_disparities\n");
+	// printf("My choose_disparities\n");
     const size_t buffer_step = height * width * (max_disparity - min_disparity + 1);
     DeviceBuffer<cost_sum_type> cost_transposed = DeviceBuffer<cost_sum_type>(buffer_step);
     
@@ -112,7 +112,7 @@ void choose_disparities(
         printf("\n");
     }
 #endif
-	printf("My choose_disparities end\n");
+	// printf("My choose_disparities end\n");
 }
 
 } // namespace sgm

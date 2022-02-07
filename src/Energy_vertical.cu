@@ -144,7 +144,7 @@ void compute_energy_up2down(
 	int min_disp,
 	cudaStream_t stream)
 {
-	printf("My compute_energy_up2down\n");
+	// printf("My compute_energy_up2down\n");
 	cudaMemcpy(dest, cost_in, sizeof(cost_type) * height * width * MAX_DISPARITY, cudaMemcpyDeviceToDevice);
     int num_threads = 1024;
 	int block_d_dim = nextPowerOf2(MAX_DISPARITY);
@@ -170,7 +170,7 @@ void compute_energy_down2up(
 	int min_disp,
 	cudaStream_t stream)
 {
-	printf("My compute_energy_down2up\n");
+	// printf("My compute_energy_down2up\n");
 	cudaMemcpy(dest, cost_in, sizeof(cost_type) * height * width * MAX_DISPARITY, cudaMemcpyDeviceToDevice);
     int num_threads = 1024;
 	int block_d_dim = nextPowerOf2(MAX_DISPARITY);
@@ -212,7 +212,7 @@ void compute_energy_down2up(
         printf("\n");
     }
 #endif
-	printf("My compute_energy_down2up ends\n");
+	// printf("My compute_energy_down2up ends\n");
 }
 
 template void compute_energy_up2down<64u>(

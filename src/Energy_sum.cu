@@ -42,7 +42,7 @@ void sum_energy_all_paths(
 	int num_paths,
 	cudaStream_t stream)
 {
-	printf("My sum_energy_all_paths\n");
+	// printf("My sum_energy_all_paths\n");
     int num_threads = 1024;
 	int block_y_dim = nextPowerOf2(height); // 512
 	int block_x_dim = num_threads / block_y_dim; // 2
@@ -79,7 +79,7 @@ void sum_energy_all_paths(
         printf("\n");
     }
 #endif
-	printf("My sum_energy_all_paths ends\n");
+	// printf("My sum_energy_all_paths ends\n");
 }
 
 template void sum_energy_all_paths<64u>(

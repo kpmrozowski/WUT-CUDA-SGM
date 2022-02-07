@@ -1,3 +1,1 @@
-cd out/build_docker/sample;
-nvprof ./stereo_test
-cd -
+nvprof out/build_docker/sample/stereo_test

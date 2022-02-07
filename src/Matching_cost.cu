@@ -57,7 +57,7 @@ void compute_matching_cost(
 	int width,
 	int height)
 {
-	printf("My matching cost\n");
+	// printf("My matching cost\n");
     int num_threads = 1024;
 	int block_x_dim = nextPowerOf2(width);
 	int block_y_dim = num_threads / block_x_dim;

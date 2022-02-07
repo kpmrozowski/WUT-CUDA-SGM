@@ -67,7 +67,7 @@ void compute_energy_L2R(
 	int min_disp,
 	cudaStream_t stream)
 {
-	printf("My compute_energy_L2R\n");
+	// printf("My compute_energy_L2R\n");
 	cudaMemcpy(dest, cost_in, sizeof(cost_type) * height * width * MAX_DISPARITY, cudaMemcpyDeviceToDevice);
     int num_threads = 1024;
 	int block_d_dim = nextPowerOf2(MAX_DISPARITY);
@@ -95,7 +95,7 @@ void compute_energy_R2L(
 	int min_disp,
 	cudaStream_t stream)
 {
-	printf("My compute_energy_R2L\n");
+	// printf("My compute_energy_R2L\n");
 	cudaMemcpy(dest, cost_in, sizeof(cost_type) * height * width * MAX_DISPARITY, cudaMemcpyDeviceToDevice);
     int num_threads = 1024;
 	int block_d_dim = nextPowerOf2(MAX_DISPARITY);
@@ -139,7 +139,7 @@ void compute_energy_R2L(
         printf("\n");
     }
 #endif
-	printf("My compute_energy_R2L ends\n");
+	// printf("My compute_energy_R2L ends\n");
 }
 
 
